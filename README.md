@@ -1,12 +1,10 @@
-# Starlight Starter Kit: Basics
+# CSUACM-Manual
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 
-```
-npm create astro@latest -- --template starlight
-```
+中南大学 ACM 校队官方手册，涵盖文化、训练、策略与成长路线。
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+based on Astro + Starlight
+
 
 ## 🚀 Project Structure
 
@@ -43,7 +41,3 @@ All commands are run from the root of the project, from a terminal:
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).

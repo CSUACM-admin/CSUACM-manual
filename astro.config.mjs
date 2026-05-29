@@ -12,7 +12,7 @@ export default defineConfig({
     integrations: [starlight({
         title: 'CSUACM 校队手册',
         customCss: ['./src/styles/custom.css'],
-        social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
+        social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/CSUACM-admin/CSUACM-manual' }],
         sidebar: [
             {
                 label: '快速开始',

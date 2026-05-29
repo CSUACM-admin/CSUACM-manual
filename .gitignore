@@ -17,8 +17,8 @@ pnpm-debug.log*
 .env
 .env.production
 
-#data
-public/data/
+# #data
+# public/data/
 
 # macOS-specific files
 .DS_Store
