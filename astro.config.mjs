@@ -6,6 +6,9 @@ import preact from '@astrojs/preact';
 
 // https://astro.build/config
 export default defineConfig({
+    site: 'https://csuacm-admin.github.io',
+    base: '/CSUACM-manual',                     
+
     server: {
         host: '0.0.0.0',
     },
