@@ -1,0 +1,577 @@
+---
+export interface Props {
+  name: string;
+  role: string;
+  grade?: string;
+  major?: string;
+  avatar?: string;
+  bio?: string;
+  skills?: string[];
+  experience?: string[];
+  contacts?: {
+    github?: string;
+    codeforces?: string;
+    luogu?: string;
+    nowcoder?: string;
+    email?: string;
+  };
+  status?: 'active' | 'alumni' | 'inactive';
+}
+
+const {
+  name,
+  role,
+  grade,
+  major,
+  avatar,
+  bio,
+  skills = [],
+  experience = [],
+  contacts = {},
+  status = 'active',
+} = Astro.props;
+
+const statusLabel = {
+  active: '现役',
+  alumni: '退役',
+  inactive: '休队',
+};
+
+const statusClass = {
+  active: 'status-active',
+  alumni: 'status-alumni',
+  inactive: 'status-inactive',
+};
+const cardId = Math.random().toString(36).slice(2, 9);
+---
+
+<div class="member-card-wrapper" data-card-wrapper={cardId}>
+  <button class="member-trigger" data-trigger={cardId} aria-label={`查看 ${name} 的详情`}>
+    <div class="member-card">
+      <div class="member-header">
+        {avatar ? (
+          <img src={avatar} alt={name} class="member-avatar" loading="lazy" />
+        ) : (
+          <div class="member-avatar-placeholder">{name.charAt(0)}</div>
+        )}
+        <span class={`member-status-badge ${statusClass[status]}`}>{statusLabel[status]}</span>
+      </div>
+
+      <div class="member-core">
+        <h3 class="member-name">{name}</h3>
+        <p class="member-role">{role}</p>
+        {(grade || major) && (
+          <p class="member-meta">
+            {grade}{grade && major && ' · '}{major}
+          </p>
+        )}
+      </div>
+
+      <div class="member-footer">
+        {(contacts.github || contacts.codeforces || contacts.luogu || contacts.nowcoder || contacts.email) && (
+          <div class="member-contacts">
+            {contacts.github && (
+              <span class="contact-icon" title="GitHub">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              </span>
+            )}
+            {contacts.codeforces && (
+              <span class="contact-icon" title="Codeforces">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm15 0c.828 0 1.5.672 1.5 1.5v10.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V9c0-.828.672-1.5 1.5-1.5h3zM12 3c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15C7.5 3.672 8.172 3 9 3h3z"/></svg>
+              </span>
+            )}
+            {contacts.luogu && (
+              <span class="contact-icon" title="洛谷">LG</span>
+            )}
+            {contacts.nowcoder && (
+              <span class="contact-icon" title="牛客">NK</span>
+            )}
+            {contacts.email && (
+              <span class="contact-icon" title="Email">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  </button>
+
+  <dialog class="member-dialog" data-dialog={cardId}>
+    <div class="dialog-content">
+      <button class="dialog-close" data-close={cardId} aria-label="关闭">×</button>
+
+      <div class="dialog-header">
+        {avatar ? (
+          <img src={avatar} alt={name} class="dialog-avatar" loading="lazy" />
+        ) : (
+          <div class="dialog-avatar-placeholder">{name.charAt(0)}</div>
+        )}
+        <div class="dialog-header-info">
+          <h3 class="dialog-name">{name}</h3>
+          <p class="dialog-role">{role}</p>
+          {(grade || major) && (
+            <p class="dialog-meta">{grade}{grade && major && ' · '}{major}</p>
+          )}
+          <span class={`dialog-status-badge ${statusClass[status]}`}>{statusLabel[status]}</span>
+        </div>
+      </div>
+
+      {bio && <p class="dialog-bio">{bio}</p>}
+
+      {skills.length > 0 && (
+        <div class="dialog-section">
+          <span class="dialog-section-label">擅长领域</span>
+          <div class="dialog-tags">
+            {skills.map((skill) => (
+              <span class="dialog-tag">{skill}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {experience.length > 0 && (
+        <div class="dialog-section">
+          <span class="dialog-section-label">竞赛经历</span>
+          <ul class="dialog-experience">
+            {experience.map((exp) => (
+              <li>{exp}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div class="dialog-contacts">
+        {contacts.github && (
+          <a href={`https://github.com/${contacts.github}`} target="_blank" rel="noopener noreferrer" class="dialog-contact-link">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>GitHub</span>
+          </a>
+        )}
+        {contacts.codeforces && (
+          <a href={`https://codeforces.com/profile/${contacts.codeforces}`} target="_blank" rel="noopener noreferrer" class="dialog-contact-link">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm15 0c.828 0 1.5.672 1.5 1.5v10.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V9c0-.828.672-1.5 1.5-1.5h3zM12 3c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15C7.5 3.672 8.172 3 9 3h3z"/></svg>
+            <span>Codeforces</span>
+          </a>
+        )}
+        {contacts.luogu && (
+          <a href={`https://www.luogu.com.cn/user/${contacts.luogu}`} target="_blank" rel="noopener noreferrer" class="dialog-contact-link">
+            <span style="font-size: 11px; font-weight: 700;">LG</span>
+            <span>洛谷</span>
+          </a>
+        )}
+        {contacts.nowcoder && (
+          <a href={`https://www.nowcoder.com/users/${contacts.nowcoder}`} target="_blank" rel="noopener noreferrer" class="dialog-contact-link">
+            <span style="font-size: 11px; font-weight: 700;">NK</span>
+            <span>牛客</span>
+          </a>
+        )}
+        {contacts.email && (
+          <a href={`mailto:${contacts.email}`} class="dialog-contact-link">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            <span>Email</span>
+          </a>
+        )}
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<script is:inline data-card-id={cardId}>
+  (function() {
+    var script = document.currentScript;
+    var cardId = script.dataset.cardId;
+    var wrapper = document.querySelector('[data-card-wrapper="' + cardId + '"]');
+    var trigger = wrapper.querySelector('[data-trigger="' + cardId + '"]');
+    var dialog = wrapper.querySelector('[data-dialog="' + cardId + '"]');
+    var closeBtn = dialog.querySelector('[data-close="' + cardId + '"]');
+
+    function closeAllDialogs() {
+      document.querySelectorAll('dialog.member-dialog[open]').forEach(function(d) {
+        d.close();
+      });
+    }
+
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var isOpen = dialog.open;
+      closeAllDialogs();
+      if (!isOpen) {
+        dialog.show();
+      }
+    });
+
+    closeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dialog.close();
+    });
+
+    // 全局事件只绑定一次
+    if (!window.__memberCardGlobalInit) {
+      window.__memberCardGlobalInit = true;
+
+      document.addEventListener('click', function(e) {
+        var target = e.target;
+        var clickedWrapper = target.closest('[data-card-wrapper]');
+        var clickedDialog = target.closest('dialog.member-dialog');
+        if (!clickedWrapper && !clickedDialog) {
+          closeAllDialogs();
+        }
+      });
+
+      // ESC 键关闭
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeAllDialogs();
+        }
+      });
+    }
+  })();
+</script>
+
+<style>
+  .member-card-wrapper {
+    display: contents;
+  }
+
+  .member-trigger {
+    all: unset;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+  }
+
+  .member-card {
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    background: var(--sl-color-black);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .member-trigger:hover .member-card {
+    border-color: var(--sl-color-gray-3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .member-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+
+  .member-avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--sl-color-gray-5);
+  }
+
+  .member-avatar-placeholder {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    border: 2px solid var(--sl-color-gray-5);
+  }
+
+  .member-status-badge {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .status-active {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+  }
+  .status-alumni {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+  }
+  .status-inactive {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+  }
+
+  .member-core {
+    margin-bottom: 0.75rem;
+  }
+
+  .member-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: var(--sl-color-white);
+  }
+
+  .member-role {
+    font-size: 0.875rem;
+    color: var(--sl-color-accent);
+    margin: 0 0 0.25rem;
+    font-weight: 500;
+  }
+
+  .member-meta {
+    font-size: 0.8rem;
+    color: var(--sl-color-gray-3);
+    margin: 0;
+  }
+
+  .member-footer {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    width: 100%;
+  }
+
+  .member-contacts {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--sl-color-gray-6);
+  }
+  .contact-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    color: var(--sl-color-gray-3);
+    background: var(--sl-color-gray-6);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  /* Dialog */
+  .member-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: visible;
+    z-index: 100;
+  }
+  .member-dialog[open] {
+    display: flex;
+  }
+
+  .dialog-content {
+    background: var(--sl-color-black);
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    width: 420px;
+    max-width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+    position: relative;
+  }
+
+  .dialog-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    border: none;
+    background: transparent;
+    color: var(--sl-color-gray-3);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    line-height: 1;
+    padding: 0;
+  }
+  .dialog-close:hover {
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+  }
+
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .dialog-avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--sl-color-gray-5);
+  }
+
+  .dialog-avatar-placeholder {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border: 2px solid var(--sl-color-gray-5);
+  }
+
+  .dialog-header-info {
+    flex: 1;
+  }
+
+  .dialog-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: var(--sl-color-white);
+  }
+
+  .dialog-role {
+    font-size: 0.9rem;
+    color: var(--sl-color-accent);
+    margin: 0 0 0.25rem;
+    font-weight: 500;
+  }
+
+  .dialog-meta {
+    font-size: 0.8rem;
+    color: var(--sl-color-gray-3);
+    margin: 0 0 0.35rem;
+  }
+
+  .dialog-status-badge {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+
+  .dialog-bio {
+    font-size: 0.9rem;
+    color: var(--sl-color-gray-2);
+    line-height: 1.6;
+    margin: 0 0 1rem;
+  }
+
+  .dialog-section {
+    margin-bottom: 0.75rem;
+  }
+  .dialog-section-label {
+    font-size: 0.7rem;
+    color: var(--sl-color-gray-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .dialog-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .dialog-tag {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-gray-2);
+    border: 1px solid var(--sl-color-gray-5);
+  }
+
+  .dialog-experience {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-2);
+  }
+  .dialog-experience li {
+    margin-bottom: 0.2rem;
+    line-height: 1.4;
+  }
+
+  /* 折叠 */
+  .exp-toggle {
+    display: none;
+  }
+  .hidden-exp {
+    display: none;
+    margin-top: 0;
+  }
+  .exp-toggle:checked ~ .hidden-exp {
+    display: block;
+  }
+  .exp-toggle:checked ~ .exp-toggle-btn .expand-text {
+    display: none;
+  }
+  .exp-toggle:not(:checked) ~ .exp-toggle-btn .collapse-text {
+    display: none;
+  }
+  .exp-toggle-btn {
+    display: inline-block;
+    margin-top: 0.3rem;
+    font-size: 0.75rem;
+    color: var(--sl-color-accent);
+    cursor: pointer;
+    user-select: none;
+  }
+  .exp-toggle-btn:hover {
+    text-decoration: underline;
+  }
+
+  .dialog-contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-gray-6);
+  }
+  .dialog-contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 0.375rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-gray-2);
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    border: 1px solid var(--sl-color-gray-5);
+  }
+  .dialog-contact-link:hover {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-white);
+    border-color: var(--sl-color-accent);
+  }
+</style>

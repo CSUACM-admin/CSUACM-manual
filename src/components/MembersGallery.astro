@@ -1,0 +1,70 @@
+---
+import MemberCard from './MemberCard.astro';
+
+export interface Props {
+  filterStatus?: 'all' | 'active' | 'alumni';
+  filterGrade?: string;
+  sortBy?: 'role' | 'name' | 'grade';
+}
+
+const { filterStatus = 'all', sortBy = 'role', filterGrade = 'all'} = Astro.props;
+
+// 批量导入所有成员 JSON 文件
+const memberFiles = import.meta.glob<{ default: Record<string, any> }>('../../public/data/members/*.json', {
+  eager: true,
+  import: 'default',
+});
+
+let members = Object.values(memberFiles);
+
+// 过滤
+if (filterStatus !== 'all') {
+  members = members.filter((m) => (m.status || 'active') === filterStatus);
+}
+if (filterGrade !== 'all') {
+  members = members.filter((m) => (m.grade) === filterGrade);
+}
+
+// 排序
+const roleOrder: Record<string, number> = {
+  '队长': 0,
+  '副队长': 1,
+  '队员': 2,
+  '退役队员': 3,
+};
+
+members = members.sort((a, b) => {
+  if (sortBy === 'role') {
+    const aOrder = roleOrder[a.role] ?? 99;
+    const bOrder = roleOrder[b.role] ?? 99;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return a.name.localeCompare(b.name);
+  }
+  if (sortBy === 'grade') {
+    return (b.grade || '').localeCompare(a.grade || '');
+  }
+  return a.name.localeCompare(b.name);
+});
+---
+
+<div class="members-gallery not-content">
+  {members.map((member) => (
+    <MemberCard {...member} />
+  ))}
+</div>
+
+<style>
+  .members-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+    align-items: stretch;
+  }
+
+  .members-gallery > :global(.member-card) {
+    flex: 1 1 280px;
+    max-width: 100%;
+    min-width: 0;
+  }
+</style>

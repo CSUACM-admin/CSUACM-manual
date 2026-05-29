@@ -1,40 +1,40 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash # Remove or comment out this line to display the site sidebar on this page.
+title: CSUACM 校队手册
+description: 中南大学 ACM 校队官方手册，涵盖文化、训练、策略与成长路线。
+template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: 系统化的校队知识库，助你从入门到退役。
   image:
-    file: ../../assets/houston.webp
+    alt: CSUACM2026 logo
+    dark: ../../assets/images/csuacm2026_logo_dark.png
+    light: ../../assets/images/csuacm2026_logo_light.png
   actions:
-    - text: Example Guide
-      link: /guides/example/
+    - text: 快速开始
+      link: /00-quick/
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
+## 手册概览
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
+	<Card title="校队文化" icon="heart">
+		了解 CSUACM 的核心精神、价值观与队员公约。
 	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
+	<Card title="训练体系" icon="document">
+		从个人训练到团队模拟赛，系统化的训练方法论。
 	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	<Card title="赛场策略" icon="rocket">
+		赛前准备、时间轴管理与赛后复盘的完整策略。
 	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
+	<Card title="成长路线" icon="open-book">
+		从大一入门到大四退役，不同阶段的成长指南。
 	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	<Card title="资源索引" icon="setting">
+		内部资源、训练平台与信息获取渠道汇总。
+	</Card>
+	<Card title="实用工具" icon="add-document">
+		训练日志、复盘模板与线下参赛清单等附录。
 	</Card>
 </CardGrid>

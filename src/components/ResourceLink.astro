@@ -1,0 +1,29 @@
+---
+export interface Props {
+  title: string;
+  href: string;
+  description?: string;
+}
+
+const { title, href, description } = Astro.props;
+---
+
+<a class="resource-link" href={href} target="_blank" rel="noopener noreferrer">
+  <h4>{title}</h4>
+  {description && <p>{description}</p>}
+</a>
+
+<style>
+  .resource-link {
+    display: block;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s;
+  }
+  .resource-link:hover {
+    border-color: var(--sl-color-accent);
+  }
+</style>

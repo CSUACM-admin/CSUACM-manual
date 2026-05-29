@@ -1,0 +1,20 @@
+---
+export interface Props {
+  year?: number;
+}
+
+const { year = new Date().getFullYear() } = Astro.props;
+---
+
+<div class="contest-calendar">
+  <h3>{year} 年度赛事日历</h3>
+  <p>TODO: 集成赛事日历数据</p>
+</div>
+
+<style>
+  .contest-calendar {
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+</style>
