@@ -1,7 +1,7 @@
 ---
 export interface Props {
   name: string;
-  role: string;
+  role: '队长' | '副队长' | '队员';
   grade?: string;
   major?: string;
   avatar?: string;
@@ -15,7 +15,7 @@ export interface Props {
     nowcoder?: string;
     email?: string;
   };
-  status?: 'active' | 'alumni' | 'inactive';
+  status?: 'active' | 'alumni';
 }
 
 const {
@@ -34,7 +34,6 @@ const {
 const statusLabel = {
   active: '现役',
   alumni: '退役',
-  inactive: '休队',
 };
 
 const statusClass = {
