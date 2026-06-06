@@ -1,0 +1,19 @@
+{
+  "name": "赵子墨",
+  "role": "队员",
+  "grade": "2025",
+  "major": "计算机科学与技术",
+  "avatar": "https://avatars.githubusercontent.com/u/221829355?v=4",
+  "bio": "灌注塔菲喵~ 灌注塔菲谢谢喵~",
+  "skills": ["术力口"],
+  "experience": [
+    "0"
+  ],
+  "contacts": {
+    "github": "Watarai-Sakana",
+    "codeforces": "Watarai",
+    "luogu": "1870750",
+    "nowcoder": "682612381"
+  },
+  "status": "active"
+}
