@@ -1,0 +1,221 @@
+---
+import EditLink from 'virtual:starlight/components/EditLink';
+import Pagination from 'virtual:starlight/components/Pagination';
+import config from 'virtual:starlight/user-config';
+import { Icon } from '@astrojs/starlight/components';
+
+interface Contributor {
+	login: string;
+	avatar: string;
+	url: string;
+}
+
+const { lastUpdated, entry } = Astro.locals.starlightRoute;
+const filePath = entry?.filePath ?? '';
+
+const owner = 'CSUACM-admin';
+const repo = 'CSUACM-manual';
+const branch = 'main';
+
+let githubDirUrl = '';
+let contributors: Contributor[] = [];
+
+if (filePath) {
+	const dirPath = filePath.slice(0, filePath.lastIndexOf('/'));
+	githubDirUrl = `https://github.com/${owner}/${repo}/tree/${branch}/${dirPath}`;
+
+	try {
+		const apiUrl = `https://api.github.com/repos/${owner}/${repo}/commits?path=${encodeURIComponent(filePath)}&per_page=100`;
+		const headers: Record<string, string> = {
+			Accept: 'application/vnd.github+json',
+			'X-GitHub-Api-Version': '2022-11-28',
+		};
+		const token = process.env.GITHUB_TOKEN;
+		if (token) {
+			headers.Authorization = `Bearer ${token}`;
+		}
+		const res = await fetch(apiUrl, { headers });
+		if (res.ok) {
+			const commits = (await res.json()) as Array<{
+				author?: { login: string; avatar_url: string; html_url: string } | null;
+			}>;
+			const seen = new Set<string>();
+			contributors = commits
+				.filter((c) => c.author && c.author.login)
+				.map((c) => ({
+					login: c.author!.login,
+					avatar: c.author!.avatar_url,
+					url: c.author!.html_url,
+				}))
+				.filter((c) => {
+					if (seen.has(c.login)) return false;
+					seen.add(c.login);
+					return true;
+				});
+		}
+	} catch {
+		// 构建时 GitHub API 调用失败则静默跳过贡献者列表
+	}
+}
+---
+
+<footer class="sl-flex">
+	<div class="meta sl-flex">
+		<EditLink />
+		{
+			lastUpdated && githubDirUrl && (
+				<p>
+					<a
+						href={githubDirUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="last-updated-link"
+					>
+						<Icon name="github" size="1.2em" />
+						<span>
+							本页面更新于{' '}
+							<time datetime={lastUpdated.toISOString()}>
+								{lastUpdated.toLocaleDateString('zh-CN', {
+									dateStyle: 'medium',
+									timeZone: 'UTC',
+								})}
+							</time>
+						</span>
+					</a>
+				</p>
+			)
+		}
+	</div>
+
+	{
+		contributors.length > 0 && (
+			<div class="contributors">
+				<span class="contributors-label">页面贡献者：</span>
+				<ul class="contributors-list">
+					{contributors.map((c) => (
+						<li>
+							<a
+								href={c.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								title={c.login}
+							>
+								<img
+									src={c.avatar}
+									alt={c.login}
+									width="28"
+									height="28"
+									loading="lazy"
+								/>
+								<span>{c.login}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+		)
+	}
+
+	<Pagination />
+
+	{
+		config.credits && (
+			<a class="kudos sl-flex" href="https://starlight.astro.build">
+				<Icon name={'starlight'} /> {Astro.locals.t('builtWithStarlight.label')}
+			</a>
+		)
+	}
+</footer>
+
+<style>
+	@layer starlight.core {
+		footer {
+			flex-direction: column;
+			gap: 1.5rem;
+		}
+		.meta {
+			gap: 0.75rem 3rem;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			margin-top: 3rem;
+			font-size: var(--sl-text-sm);
+			color: var(--sl-color-gray-3);
+		}
+		.meta > :global(p:only-child) {
+			margin-inline-start: auto;
+		}
+
+		.last-updated-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.4em;
+			text-decoration: none;
+			color: var(--sl-color-gray-3);
+		}
+		.last-updated-link:hover {
+			color: var(--sl-color-white);
+		}
+
+		.contributors {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 0.5rem 1rem;
+			font-size: var(--sl-text-sm);
+			color: var(--sl-color-gray-3);
+		}
+		.contributors-label {
+			font-weight: 500;
+			flex-shrink: 0;
+		}
+		.contributors-list {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+		.contributors-list li a {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.35rem;
+			text-decoration: none;
+			color: var(--sl-color-gray-3);
+			background: var(--sl-color-gray-6);
+			border: 1px solid var(--sl-color-gray-5);
+			border-radius: 999px;
+			padding: 0.15rem 0.6rem 0.15rem 0.15rem;
+			transition: border-color 0.2s, color 0.2s, background 0.2s;
+		}
+		.contributors-list li a:hover {
+			color: var(--sl-color-white);
+			border-color: var(--sl-color-gray-2);
+			background: var(--sl-color-gray-5);
+		}
+		.contributors-list img {
+			border-radius: 50%;
+			width: 1.5rem;
+			height: 1.5rem;
+			object-fit: cover;
+		}
+
+		.kudos {
+			align-items: center;
+			gap: 0.5em;
+			margin: 1.5rem auto;
+			font-size: var(--sl-text-xs);
+			text-decoration: none;
+			color: var(--sl-color-gray-3);
+		}
+		.kudos:hover {
+			color: var(--sl-color-white);
+		}
+	}
+
+	@layer starlight.components {
+		.kudos :global(svg) {
+			color: var(--sl-color-orange);
+		}
+	}
+</style>

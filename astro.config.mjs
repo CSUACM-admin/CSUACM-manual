@@ -14,20 +14,24 @@ export default defineConfig({
     },
     integrations: [starlight({
         title: 'CSUACM 校队手册',
+        lastUpdated: true,
+        components: {
+            Footer: './src/components/Footer.astro',
+        },
         customCss: ['./src/styles/custom.css'],
         social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/CSUACM-admin/CSUACM-manual' }],
         sidebar: [
             {
-                label: '快速开始',
-                items: [{ autogenerate: { directory: '00-quick' } }],
+                label: '写在前面',
+                items: [{ autogenerate: { directory: '00-intro' } }],
             },
             {
-                label: '第1章：校队文化与精神',
+                label: '第1章：校队介绍',
                 items: [{ autogenerate: { directory: '01-culture' } }],
             },
             {
-                label: '第2章：组织架构与角色分工',
-                items: [{ autogenerate: { directory: '02-organization' } }],
+                label: '第2章：竞赛介绍与信息',
+                items: [{ autogenerate: { directory: '02-contest-introduction' } }],
             },
             {
                 label: '第3章：训练体系与方法论',
