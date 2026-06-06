@@ -7,7 +7,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "build:members": "npm run build && node scripts/post-build-members.mjs"
   },
   "dependencies": {
     "@astrojs/preact": "^5.1.3",

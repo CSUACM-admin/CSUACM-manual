@@ -20,8 +20,9 @@ pnpm-debug.log*
 .env
 .env.production
 
-# #data
-# public/data/
+# 本地构建静态历届校队成员选手的单页面
+src/pages/members.astro
+scripts/post-build-members.mjs
 
 # macOS-specific files
 .DS_Store
