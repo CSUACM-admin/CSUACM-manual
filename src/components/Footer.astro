@@ -20,7 +20,7 @@ const branch = 'main';
 let githubDirUrl = '';
 let contributors: Contributor[] = [];
 
-if (filePath) {
+if (filePath && entry.data.template !== 'splash') {
 	const dirPath = filePath.slice(0, filePath.lastIndexOf('/'));
 	githubDirUrl = `https://github.com/${owner}/${repo}/tree/${branch}/${dirPath}`;
 
@@ -135,14 +135,11 @@ if (filePath) {
 		}
 		.meta {
 			gap: 0.75rem 3rem;
-			justify-content: space-between;
+			justify-content: flex-start;
 			flex-wrap: wrap;
 			margin-top: 3rem;
 			font-size: var(--sl-text-sm);
 			color: var(--sl-color-gray-3);
-		}
-		.meta > :global(p:only-child) {
-			margin-inline-start: auto;
 		}
 
 		.last-updated-link {
